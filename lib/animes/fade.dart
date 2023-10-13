@@ -11,8 +11,8 @@ class FadeInWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: animation,
+    return ScaleTransition(
+      scale: animation,
       child: child,
     );
   }

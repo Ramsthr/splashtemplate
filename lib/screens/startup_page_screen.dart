@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:splashscreen/home_screen.dart';
+import 'package:splashscreen/screens/home_screen.dart';
+import 'package:splashscreen/widget/pageroutewidget.dart';
 
 class StartupPageScreen extends StatelessWidget {
   final int pageno;
@@ -13,15 +14,13 @@ class StartupPageScreen extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          AnimatedContainer(
-            duration: Duration(milliseconds: 500),
-            curve: Curves.bounceOut,
+          Container(
             height: height * 0.2,
             alignment: Alignment.centerRight,
             child: GestureDetector(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const HomeScreen()));
+                Navigator.of(context).push(pageRouteBuilderFunction(
+                    Alignment.topRight, const HomeScreen()));
               },
               child: const Text(
                 "Skip",

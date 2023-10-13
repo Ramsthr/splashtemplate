@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:splashscreen/animes/fade.dart';
-import 'package:splashscreen/home_screen.dart';
-import 'package:splashscreen/startup_page_screen.dart';
+import 'package:splashscreen/screens/home_screen.dart';
+import 'package:splashscreen/screens/startup_page_screen.dart';
+import 'package:splashscreen/widget/pageroutewidget.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,10 +43,6 @@ class _StartupPageState extends State<StartupPage>
   late List<AnimationController> _animationControllers;
   late List<Animation<double>> _animations;
 
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _opacityAnimation;
-  late Animation<double> _rotationAnimation;
-
   @override
   void initState() {
     super.initState();
@@ -53,23 +50,13 @@ class _StartupPageState extends State<StartupPage>
       3,
       (index) => AnimationController(
         vsync: this,
-        duration: const Duration(milliseconds: 5000),
+        duration: const Duration(milliseconds: 800),
       ),
     );
 
-    var pi = 22 / 7;
-    _scaleAnimation =
-        CurvedAnimation(parent: _animationControllers[0], curve: Curves.linear);
-    _opacityAnimation = CurvedAnimation(
-        parent: _animationControllers[0], curve: Curves.bounceOut);
-    _rotationAnimation =
-        Tween(begin: 0.0, end: 2 * pi).animate(_animationControllers[2]);
-
-    _animations = [_scaleAnimation, _opacityAnimation, _rotationAnimation];
-
-    // _animations = _animationControllers
-    //     .map((controller) => Tween(begin: 0.0, end: 1.0).animate(controller))
-    //     .toList();
+    _animations = _animationControllers
+        .map((controller) => Tween(begin: 0.0, end: 1.0).animate(controller))
+        .toList();
   }
 
   @override
@@ -88,7 +75,11 @@ class _StartupPageState extends State<StartupPage>
           itemCount: 3,
           controller: _controller,
           itemBuilder: (context, index) {
-            _animationControllers[index].forward();
+            if (index == currentpage) {
+              _animationControllers[index].forward();
+            } else {
+              _animationControllers[index].reverse();
+            }
             return FadeInWidget(
               animation: _animations[index],
               child: StartupPageScreen(pageno: index + 1),
@@ -137,7 +128,8 @@ class _StartupPageState extends State<StartupPage>
                   currentpage++;
                 });
                 if (currentpage > 2) {
-                  Navigator.popAndPushNamed(context, '/home');
+                  Navigator.of(context).push(pageRouteBuilderFunction(
+                      Alignment.bottomRight, const HomeScreen()));
                 }
               },
             ),
