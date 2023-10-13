@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:splashscreen/animes/fade.dart';
+import 'package:splashscreen/resources/inputimageandtext.dart';
 import 'package:splashscreen/screens/home_screen.dart';
 import 'package:splashscreen/screens/startup_page_screen.dart';
 import 'package:splashscreen/widget/pageroutewidget.dart';
@@ -47,7 +48,7 @@ class _StartupPageState extends State<StartupPage>
   void initState() {
     super.initState();
     _animationControllers = List.generate(
-      3,
+      dataList.length,
       (index) => AnimationController(
         vsync: this,
         duration: const Duration(milliseconds: 800),
@@ -72,7 +73,7 @@ class _StartupPageState extends State<StartupPage>
     return Scaffold(
       body: PageView.builder(
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: 3,
+          itemCount: dataList.length,
           controller: _controller,
           itemBuilder: (context, index) {
             if (index == currentpage) {
@@ -82,7 +83,7 @@ class _StartupPageState extends State<StartupPage>
             }
             return FadeInWidget(
               animation: _animations[index],
-              child: StartupPageScreen(pageno: index + 1),
+              child: StartupPageScreen(pageno: index),
             );
           }),
       bottomNavigationBar: BottomAppBar(
@@ -94,7 +95,7 @@ class _StartupPageState extends State<StartupPage>
           children: [
             Row(
               children: List.generate(
-                3,
+                dataList.length,
                 (index) => Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: AnimatedContainer(

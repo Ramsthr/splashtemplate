@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:splashscreen/resources/inputimageandtext.dart';
 import 'package:splashscreen/screens/home_screen.dart';
 import 'package:splashscreen/widget/pageroutewidget.dart';
 
@@ -16,6 +17,7 @@ class StartupPageScreen extends StatelessWidget {
         children: [
           Container(
             height: height * 0.2,
+            padding: const EdgeInsets.only(right: 10),
             alignment: Alignment.centerRight,
             child: GestureDetector(
               onTap: () {
@@ -35,53 +37,34 @@ class StartupPageScreen extends StatelessWidget {
           Container(
             height: height * 0.4,
             width: width * 0.6,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: Colors.black45,
-              borderRadius: BorderRadius.all(
+              image: DecorationImage(
+                  image: AssetImage(dataList[pageno].imageUrl),
+                  fit: BoxFit.fill),
+              borderRadius: const BorderRadius.all(
                 Radius.circular(50),
-              ),
-            ),
-            child: Center(
-              child: Text(
-                '$pageno',
-                style: const TextStyle(
-                  color: Colors.black45,
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                ),
               ),
             ),
           ),
           Container(
             padding: const EdgeInsets.only(top: 20),
-            child: const Column(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Your title Goes",
-                  style: TextStyle(
+                  dataList[pageno].bigText,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
                     color: Colors.black45,
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  "Here!",
-                  style: TextStyle(
-                    color: Colors.black45,
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  "lorem ipsum dollor sit amet,",
-                  style: TextStyle(
-                    color: Colors.black45,
-                    fontSize: 20,
-                  ),
-                ),
-                Text(
-                  "consectetur adipiscing elit",
-                  style: TextStyle(
+                  dataList[pageno].smallText,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
                     color: Colors.black45,
                     fontSize: 20,
                   ),
