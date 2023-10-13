@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:splashscreen/animes/fade.dart';
 import 'package:splashscreen/home_screen.dart';
 import 'package:splashscreen/startup_page_screen.dart';
 
@@ -34,9 +35,51 @@ class StartupPage extends StatefulWidget {
   State<StartupPage> createState() => _StartupPageState();
 }
 
-class _StartupPageState extends State<StartupPage> {
+class _StartupPageState extends State<StartupPage>
+    with TickerProviderStateMixin {
   final _controller = PageController();
   int currentpage = 0;
+  late List<AnimationController> _animationControllers;
+  late List<Animation<double>> _animations;
+
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _opacityAnimation;
+  late Animation<double> _rotationAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationControllers = List.generate(
+      3,
+      (index) => AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 5000),
+      ),
+    );
+
+    var pi = 22 / 7;
+    _scaleAnimation =
+        CurvedAnimation(parent: _animationControllers[0], curve: Curves.linear);
+    _opacityAnimation = CurvedAnimation(
+        parent: _animationControllers[0], curve: Curves.bounceOut);
+    _rotationAnimation =
+        Tween(begin: 0.0, end: 2 * pi).animate(_animationControllers[2]);
+
+    _animations = [_scaleAnimation, _opacityAnimation, _rotationAnimation];
+
+    // _animations = _animationControllers
+    //     .map((controller) => Tween(begin: 0.0, end: 1.0).animate(controller))
+    //     .toList();
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _animationControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +88,11 @@ class _StartupPageState extends State<StartupPage> {
           itemCount: 3,
           controller: _controller,
           itemBuilder: (context, index) {
-            return StartupPageScreen(pageno: index + 1);
+            _animationControllers[index].forward();
+            return FadeInWidget(
+              animation: _animations[index],
+              child: StartupPageScreen(pageno: index + 1),
+            );
           }),
       bottomNavigationBar: BottomAppBar(
         elevation: 0,
@@ -96,99 +143,6 @@ class _StartupPageState extends State<StartupPage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class StartupPageScreen extends StatelessWidget {
-  final int pageno;
-  const StartupPageScreen({super.key, required this.pageno});
-
-  @override
-  Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            height: height * 0.2,
-            alignment: Alignment.centerRight,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const HomeScreen()));
-              },
-              child: const Text(
-                "Skip",
-                style: TextStyle(
-                  color: Colors.black45,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          Container(
-            height: height * 0.4,
-            width: width * 0.6,
-            decoration: const BoxDecoration(
-              color: Colors.black45,
-              borderRadius: BorderRadius.all(
-                Radius.circular(50),
-              ),
-            ),
-            child: Center(
-              child: Text(
-                '$pageno',
-                style: const TextStyle(
-                  color: Colors.black45,
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top: 20),
-            child: const Column(
-              children: [
-                Text(
-                  "Your title Goes",
-                  style: TextStyle(
-                    color: Colors.black45,
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  "Here!",
-                  style: TextStyle(
-                    color: Colors.black45,
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  "lorem ipsum dollor sit amet,",
-                  style: TextStyle(
-                    color: Colors.black45,
-                    fontSize: 20,
-                  ),
-                ),
-                Text(
-                  "consectetur adipiscing elit",
-                  style: TextStyle(
-                    color: Colors.black45,
-                    fontSize: 20,
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
       ),
     );
   }

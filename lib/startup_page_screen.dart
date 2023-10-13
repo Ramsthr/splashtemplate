@@ -13,7 +13,9 @@ class StartupPageScreen extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
+          AnimatedContainer(
+            duration: Duration(milliseconds: 500),
+            curve: Curves.bounceOut,
             height: height * 0.2,
             alignment: Alignment.centerRight,
             child: GestureDetector(
